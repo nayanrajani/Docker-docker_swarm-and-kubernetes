@@ -58,7 +58,7 @@
 
 - Docker Commands
 
-  - docker –version – Display the current version.
+  - docker –version – Display the current versions.
   - docker pull <image> – Docker repository images can be pulled using the docker pull command.
   - docker ps -a – Displays running and exited containers.
   - docker exec -it <container id> bash – Command for accessing running container.
