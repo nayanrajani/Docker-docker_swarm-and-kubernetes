@@ -1,0 +1,50 @@
+---------------Useful commands--------
+
+$docker run image_name
+For start a new container.
+If the image doesn-t exist in the local registry,
+it will download from remote registry (ex DockerHub)
+withe the command docker pull "image_name"
+
+$docker run --name image_name
+Run a container with specific name
+$docker run -d image_name
+ Run the  app or image in background
+ *To specify the version
+ $docker run image_name:tag
+ 
+$docker ps
+is to see all running container
+
+$docker ps -a
+List all container with thier status (Up, Exited, created)
+You will see all containers stopped an running
+
+DEF : a container is an instance of an image.
+Each container is identify by by an ID in your environment.
+
+$docker stop container_id
+
+$docker stop "container_id or container_name"
+To stop a container
+$docker rm "container_id or container_name"
+To suppress permentaly a container"
+
+$docker inspect container_id
+
+inspect permit you to have more useful informations
+about your container rather than ps
+
+
+$docker logs container_id 
+
+When you start a container, it can be useful to see logs.
+You can acheive that by logs command.
+
+$docker images
+To all images in your local registry
+
+$docker rmi "image_name or image_id"
+
+To suppress an image, but before you should suppress (rm) all containers
+that using that image.

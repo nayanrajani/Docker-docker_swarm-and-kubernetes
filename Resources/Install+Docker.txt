@@ -1,0 +1,28 @@
+
+#virt-install \
+--name node01KB4 \
+--vcpus 2 \
+--memory 2048 \
+--disk path=/var/lib/libvirt/images/ubuntu2004NodeKB4.img,size=10 \
+--cdrom /tmp/ubuntu-20.04.4-live-server-amd64.iso \
+--nographics \
+--os-type linux \
+--network network:management01 \
+--boot kernel=casper/vmlinuz,initrd=casper/initrd,kernel_args="console=ttyS0"
+
+
+
+---------------Docker install----------------
+
+.~# apt -y install docker.io
+.~# docker version
+
+INFO: When your install Docker,
+ it (docker engine) install his own network interface named docker0.
+ With an ip.
+ 
+ THIS ip an internal ip for the container environment.
+ All container can see this IP, but remotely or from Host you can't.
+ 
+ To reach, the container app, remotely you have to do port mapping.
+Tape ip addr to see.

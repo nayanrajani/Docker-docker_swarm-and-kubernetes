@@ -1,0 +1,59 @@
+-----------------Add container Image -----------------------
+
+# download the image
+
+
+
+root@docker:~#docker pull rabbitmq
+
+root@docker:~# docker pull jenkins
+
+root@docker:~# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED      SIZE
+ubuntu       latest    ff0fea8310f3   9 days ago   72.8MB
+root@docker:~#
+
+root@docker:~# docker run ubuntu /bin/echo "Hello how are you"
+Hello how are you
+root@docker:~#
+
+
+root@docker:~# docker run -it ubuntu /bin/bash
+root@c660e4aa5679:/#
+root@c660e4aa5679:/#
+root@c660e4aa5679:/# ls
+bin   etc   lib32   media  proc  sbin  tmp
+boot  home  lib64   mnt    root  srv   usr
+dev   lib   libx32  opt    run   sys   var
+
+root@c660e4aa5679:/# uname -a
+Linux c660e4aa5679 5.4.0-105-generic #119-Ubuntu SMP Mon Mar 7 18:49:24 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+root@c660e4aa5679:/#
+
+hit ctrl + Q or ctrl + P OR ctrl + P + Q
+
+root@aa2656eaf2f0:/# root@docker:~#
+root@docker:~#
+
+
+
+root@docker:~# docker ps
+CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS         PORTS     NAMES
+aa2656eaf2f0   ubuntu    "/bin/bash"   5 minutes ago   Up 5 minutes             nostalgic_chatterjee
+root@docker:~#
+
+Juste hit EXIT to exit and the container will be terminated.
+
+
+****To attach to console 
+
+root@docker:~# docker attach aa2656eaf2f0
+root@aa2656eaf2f0:/#
+
+*Delete an image but before you have to delete all container associated (docker rm container_id)
+root@docker:~# docker rmi ubuntu
+Untagged: ubuntu:latest
+Untagged: ubuntu@sha256:bea6d19168bbfd6af8d77c2cc3c572114eb5d113e6f422573c93cb605a0e2ffb
+Deleted: sha256:ff0fea8310f3957d9b1e6ba494f3e4b63cb348c76160c6c15578e65995ffaa87
+Deleted: sha256:867d0767a47c392f80acb51572851923d6d3e55289828b0cd84a96ba342660c7
+root@docker:~#
