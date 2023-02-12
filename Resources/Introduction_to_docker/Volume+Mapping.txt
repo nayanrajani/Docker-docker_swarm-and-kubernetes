@@ -1,0 +1,65 @@
+-------------------Volume mapping-----------------
+
+
+When your restart a container all data will be removed.
+So to avoid that, your should perform volume mapping.
+
+root@docker:~# mkdir -p /var/lib/docker/disk02
+root@docker:~# docker run --name nginxmounted2 -it -v /var/lib/docker/disk02:/mnt nginx /bin/bash
+
+root@247869bf18e2:/#  echo "persistent storage" >> /mnt/testfile.txt
+
+
+root@247869bf18e2:/# root@docker:~#
+root@docker:~#
+root@docker:~#
+root@docker:~#
+root@docker:~# cd /var/lib/docker/disk02
+root@docker:/var/lib/docker/disk02# ls
+testfile.txt
+root@docker:/var/lib/docker/disk02# cd
+root@docker:~#
+
+
+
+root@docker:~# docker volume create volume01
+volume01
+root@docker:~# docker volume ls
+DRIVER    VOLUME NA
+local     volume01
+root@docker:~# docker volume inspect volume01
+[
+    {
+        "CreatedAt": "2022-03-27T11:59:43Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/volume01/_data",
+        "Name": "volume01",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+root@docker:~#
+
+
+root@docker:~# docker run -d -v volume01:/mnt2 nginx
+
+root@docker:~# docker run --name mycontainer2 -it -v volume02:/mnt nginx /bin/bash
+root@ff50d98bc9b8:/#
+
+
+
+# to remove volumes, do like follows
+.~# docker volume rm volume01
+
+
+
+# create [nfs-volume] volume
+.~# docker volume create \
+--opt type=nfs \
+--opt o=addr=10.0.0.35,rw,nfsvers=4 \
+--opt device=:/home/nfsshare nfs-volume
+.~# docker volume inspect nfs-volume
+
+# run container with mounting [nfs-volume] to [/nfsshare] on container
+.~# docker run -it -v nfs-volume:/nfsshare ubuntu

@@ -1,0 +1,73 @@
+--------------------------DOCKER SWARM------------
+What will happen when your host or your container engine failed ?
+How your app will continue to deliver the service.
+
+That where Docker WARM comes to play.
+
+Docker SWARM is a tool that handle container orchestration through high availability, 
+the scalability, replication, health monitoring.
+
+echo -e "11.10.10.200 nodesw1\n11.10.10.205 nodesw2\n11.10.10.26 nodesw3\n11.10.10.32 nodesw4" >> /etc/hosts
+cat /etc/hosts
+
+
+It combine many docker engine in a cluster.
+# apt -y install docker.io
+1- Install the swarm manager:
+
+$docker swarm init --advertise-addr HOST_IP --listen-addr 0.0.0.0
+
+root@dockersw:~# docker swarm init \
+--advertise-addr 11.10.10.200 \
+--listen-addr 0.0.0.0
+Swarm initialized: current node (jg1ssua4fdzxz0wtun1fk9gp9) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-1i5xq40zwvjerufvicj0bxuar25pn54odn5a22hyws9zl4zmu5-9yvbyp7eeesry2kmm3o63mnkw 11.10.10.139:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+
+
+docker swarm join --token SWMTKN-1-04ssy8aimb4c1fxzxn86ooq1xzo307rreau555n73xw15isxn9-2h66eyo3ehry59zz27jgumkxa 11.10.10.200:2377
+
+root@dockersw:~#
+root@dockersw2:~# docker swarm join --token SWMTKN-1-1i5xq40zwvjerufvicj0bxuar25pn54odn5a22hyws9zl4zmu5-9yvbyp7eeesry2kmm3o63mnkw 11.10.10.139:2377
+This node joined a swarm as a worker.
+root@dockersw2:~#
+
+root@dockersw3:~# docker swarm join --token SWMTKN-1-1i5xq40zwvjerufvicj0bxuar25pn54odn5a22hyws9zl4zmu5-9yvbyp7eeesry2kmm3o63mnkw 11.10.10.139:2377
+This node joined a swarm as a worker.
+root@dockersw3:~#
+
+
+
+
+
+List nodes
+$docker nodes ls
+
+
+
+**************deploy container ************
+
+$docker service create --name webnginx -p 6443:80 nginx
+
+
+More info on container
+$docker service ps webnginx
+
+
+remove a container
+
+$docker service rm webnginx
+
+
+**************
+$docker service ls
+
+list all container
+
+
+$docker service rm container_name

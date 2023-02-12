@@ -1,0 +1,28 @@
+-------------DOCKER NETWORKING --------------
+Bridge: is the defaul internal private network.
+with dhcp addressing.
+172.17.0.x
+
+
+$docker network ls
+To list all networks used
+
+
+$docker network create --driver bridge --subnet 198.168.10.0/24 my-custom-net
+
+this command permit to create a new network.
+
+
+$docker network inspect my-custom-net
+
+
+When you have many container types , the advice is to create  somes network.
+
+
+$docker run -d --network=my-custom-net --name myngin01 nginx
+
+To run an container under a network.
+
+
+
+ docker run -d --network host --name my_nginx05 nginx

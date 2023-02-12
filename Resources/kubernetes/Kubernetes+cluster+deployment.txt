@@ -1,0 +1,49 @@
+*********************************************KUBERNETES INSTALL ****************************
+
+
+***************************ON all NODES********************
+
+
+echo -e "11.10.10.49 nodekb1\n11.10.10.126 nodekb2\n11.10.10.212 nodekb3\n11.10.10.179 nodekb4" >> /etc/hosts
+cat /etc/hosts
+
+
+
+.~# apt -y install docker.io apt-transport-https
+# cgroup driver uses systemd
+.~# cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+.~# systemctl restart docker
+.~# systemctl enable docker
+.~# cat > /etc/sysctl.d/k8s.conf <<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+.~# sysctl --system
+ 
+
+# if swap is On, turn to Off
+.~# swapoff -a
+.~# vi /etc/fstab
+# comment out swap line
+#/dev/mapper/ubuntu--vg-swap_1 none swap sw 0 0
+
+
+
+2- 	Install Kubeadm, Kubelet, Kubectl on all Nodes.
+
+.~# curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+OK
+.~# echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+.~# apt update
+.~# apt -y install kubeadm kubelet kubectl

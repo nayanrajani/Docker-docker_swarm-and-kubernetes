@@ -1,5 +1,7 @@
 # Docker-docker_swarm-and-kubernetes
 
+## Introduction to Docker
+
 - <img width="532" alt="image" src="https://user-images.githubusercontent.com/57224583/218272989-24e7ba38-45e3-4fac-96b0-7f6181c2ae2e.png">
 
 - So first of all, you have to get a container environment.
@@ -35,7 +37,7 @@
 - The corridor is free by default and or pull this image locally before able to be here or lost this new instance and build your container image.
 - Okay, so is that whole for this global stature and now you to move on our labor or environment.
 
-## Install Docker on ubuntu
+### Install Docker on ubuntu
 
 - check Install+Docker.txt
 
@@ -52,7 +54,7 @@
   - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   - docker version
 
-## Docker hub Public repository
+### Docker hub Public repository
 
 - Docker Hub is the world’s largest repository of container images with an array of content sources including container community developers, open source projects and independent software vendors (ISV) building and distributing their code in containers. Users get access to free public repositories for storing and sharing images or can choose subscription plan for private repos.
 
@@ -85,7 +87,7 @@
 - Tips and Tricks to Use Docker Commands
   - Use -f flag for activating the logging.
 
-## Add container Image
+### Add container Image
 
 - check Add+Image.txt
 
@@ -102,7 +104,7 @@
   - now check the jenkins is running or not, by below command
     - <yourVMPublicIPAddress>:9080
 
-## Basic Commands
+### Basic Commands
 
 - check Basic+commands.txt
 
@@ -116,4 +118,119 @@
 - docker rmi ubuntu
 - docker rmi jenkins
 - docker rmi jenkins:2.60.3
-- docker images-
+- docker images
+
+### Build New Image
+
+- check Build+a+new+Image.txt
+- docker pull ubuntu
+- apt-get install -y vim
+- vi Dockerfile
+  - FROM ubuntu
+  - MAINTAINER BEKROUNDJO AKOLEY
+  - RUN apt-get update
+  - RUN apt-get -y install tzdata
+  - RUN apt-get -y install apache2
+  - RUN echo "Dockerfile Test on Apache2 For new container" > /var/www/html/index.html
+  - EXPOSE 80
+  - CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+- ls -l
+- docker images
+- docker build -t ubuntu:latest .
+- docker images
+- docker run -d ubuntu:latest
+- docker ps -a
+- docker inspect 917119b98b75
+- curl 172.17.0.2:80
+- cat Dockerfile
+
+### Port Mapping
+
+- <img width="361" alt="image" src="https://user-images.githubusercontent.com/57224583/218323336-a00b4b62-7950-4ea9-a11c-cf646e3b6199.png">
+
+- check PORT+MAPPING.txt
+- docker ps -a
+- docker run -d ubuntu:latest
+- docker ps
+- docker inspect e617b56295c3
+- curl 172.17.0.2:80
+- docker images
+- docker run -d -p 8099:80 ubuntu:latest
+- docker ps
+  - <yourVMPublicIPAddress>:8099
+
+### Volume Mapping
+
+- to store the volume or data if your container is restarting or stopping
+- check Volume+Mapping.txt
+- mkdir -p /var/lib/docker/disk02
+- docker pull nginx
+- docker run --name nginxmounted2 -it -v /var/lib/docker/disk02:/mnt nginx /bin/bash
+  - echo "persistent storage" >> /mnt/testfile.txt
+  - df -h
+- docker ps
+- docker volume create volume01
+- docker volume ls
+- docker volume inspect volume01
+- docker run -d -v volume01:/mnt2 nginx
+- docker volume create volume02
+- docker run --name mycontainer2 -it -v volume02:/mnt nginx /bin/bash
+  - df -h
+
+### Docker Network
+
+- <img width="511" alt="image" src="https://user-images.githubusercontent.com/57224583/218323377-3a007855-0791-4c6b-825e-d73cfad68258.png">
+
+- check Docker+Network.txt
+- docker network ls
+- docker network create --driver bridge --subnet 198.168.10.0/24 my-custom-net
+- docker network inspect my-custom-net
+- docker run -d --network=my-custom-net --name myngin01 nginx
+- docker ps
+- docker inspect 7915b19417ef
+- curl 198.168.10.2:80
+- docker run -d --network host --name my_nginx05 nginx
+- docker ps
+- docker inspect c7754a52e545
+- docker ps
+- docker network inspect my-custom-net
+- docker network ls
+  - Now run in browser with you ec2 instance public ip address.
+
+### Docker Compose
+
+- <img width="524" alt="image" src="https://user-images.githubusercontent.com/57224583/218328723-45706f58-ed02-4cb5-89fb-0769358c6e7f.png">
+- check Docker+compose.txt
+- Manual Way [Not Recommended]
+
+  - docker run -d --name=redis redis
+  - docker run -d --name db -e POSTGRES_HOST_AUTH_METHOD=trust postgres:9.4
+  - docker run -d --name=vote -p 5000:80 --link=redis:redis eesprit/voting-app-vote
+  - docker run -d --name=result -p 5001:80 --link=db:db eesprit/voting-app-result
+  - docker run -d --name=worker --link=redis:redis --link=db:db eesprit/voting-app-worker
+  - docker ps
+  - docker stop da1229c7ad37 718fab01e599 de6ce455b2fb 7f3219b6fc71 9bcb78830618
+  - docker rm da1229c7ad37 718fab01e599 de6ce455b2fb 7f3219b6fc71 9bcb78830618
+
+- Better way by creating one yaml file.
+  - apt -y install docker-compose
+  - nano docker-compose.yaml
+    - other name you get this -> ERROR:
+      - Can't find a suitable configuration file in this directory or any parent. Are you in the right directory?
+      - Supported filenames: docker-compose.yml, docker-compose.yaml, compose.yml, compose.yaml
+  - cat docker-compose.yaml
+  - docker-compose up -d
+  - ls -l
+  - docker-compose up -d
+  - docker ps
+  - docker stop d0f24a31ead1 77519a686b29 c4c43a7dcfaf cdb0b2020897 85cc3927753f
+  - docker rm d0f24a31ead1 77519a686b29 c4c43a7dcfaf cdb0b2020897 85cc3927753f
+  - docker ps
+  - docker images
+  - docker rmi redis:alpine redis:latest nginx:latest postgres:9.4 eesprit/voting-app-vote:latest eesprit/voting-app-result:latest eesprit/voting-app-worker:latest
+  - docker rmi --force nginx:latest
+  - docker images
+  - docker rmi --force ub
+  - docker rmi --force ubuntu
+
+## Docker Swarm

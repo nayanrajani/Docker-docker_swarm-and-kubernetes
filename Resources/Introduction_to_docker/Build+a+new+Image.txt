@@ -1,0 +1,44 @@
+----------------------------------Build new image--------------------
+
+oot@docker:~# vi Dockerfile
+
+
+FROM ubuntu
+MAINTAINER BEKROUNDJO AKOLEY
+
+RUN apt-get update
+RUN apt-get -y install tzdata
+RUN apt-get -y install apache2
+RUN echo "Dockerfile Test on Apache2 For new container" > /var/www/html/index.html
+
+EXPOSE 80
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+
+
+
+root@docker:~# docker build -t world3/ubuntu-apache2:latest .
+
+Sending build context to Docker daemon   12.8kB
+Step 1/8 : FROM ubuntu
+ ---> ff0fea8310f3
+Step 2/8 : MAINTAINER BEKROUNDJO AKOLEY ARISTIDE
+ ---> Running in 818d870fea4f
+Removing intermediate container 818d870fea4f
+ ---> 5459ebc414dc
+Step 3/8 : RUN apt-get update
+ ---> Running in df25e0d07f85
+.......
+........
+Step 8/8 : CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+ ---> Running in bd49985f1508
+Removing intermediate container bd49985f1508
+ ---> c1103d9f90da
+Successfully built c1103d9f90da
+Successfully tagged world1/ubuntu-apache2:latest
+
+
+root@docker:~# docker images
+REPOSITORY                  TAG       IMAGE ID       CREATED          SIZE
+world1/ubuntu-apache2   latest    c1103d9f90da   13 seconds ago   222MB
+ubuntu                      latest    ff0fea8310f3   9 days ago       72.8MB
+root@docker:~#

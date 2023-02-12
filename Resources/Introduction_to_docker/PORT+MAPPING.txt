@@ -1,0 +1,10 @@
+---------------------------PORT MAPPING----------------
+
+root@docker:~# docker run -d -p 8099:80 ubuntu-apache2
+c4e6f61c37a0c08332aef5ba6c1b940fe7ddfd7aa7e3427ff5064f081c660a1b
+
+
+root@docker:~# docker ps
+CONTAINER ID   IMAGE                       COMMAND                  CREATED              STATUS              PORTS                                   NAMES
+c4e6f61c37a0   ubuntu-apache2   "/usr/sbin/apachectl…"   About a minute ago   Up About a minute   0.0.0.0:8099->80/tcp, :::8099->80/tcp   elastic_maxwell
+root@docker:~#
