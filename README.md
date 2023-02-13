@@ -47,11 +47,12 @@
   - sudo su -
   - sudo apt-get update
   - sudo mkdir -m 0755 -p /etc/apt/keyrings
-  - 6 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
     \$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   - sudo apt-get update
   - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt install docker.io
   - docker version
 
 ### Docker hub Public repository
@@ -78,6 +79,8 @@
   - docker import [OPTIONS] file|URL|- [REPOSITORY[: TAG]] – Importing contents from the tarball to create a system image of the file.
   - docker info [OPTIONS] – Display system-wide information
   - docker logout [SERVER] – Logging out of a Docker registry.
+  - forcefully remove the <none> tag images
+    - docker rmi \$(docker images -f dangling=true -q) --force
 
 - Advance commands
 
@@ -234,3 +237,69 @@
   - docker rmi --force ubuntu
 
 ## Docker Swarm
+
+- <img width="530" alt="image" src="https://user-images.githubusercontent.com/57224583/218383055-865bb5ec-78d3-4d4c-9c18-8c09a6d9cbce.png">
+
+- <img width="526" alt="image" src="https://user-images.githubusercontent.com/57224583/218383349-0f47bf42-8009-4e94-b2c8-b9123dfd9f4a.png">
+
+- check Docker+SWARM.txt
+- Master node
+  - sudo apt-get update
+  - sudo mkdir -m 0755 -p /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    \$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt install docker.io
+  - docker version
+  - docker swarm init --advertise-addr <yourhostprivateip>:2377 --listen-addr 0.0.0.0
+    - then copy the token to paste in worker nodes
+  - docker node ls
+- Worker node 1
+  - sudo apt-get update
+  - sudo mkdir -m 0755 -p /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    \$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt install docker.io
+  - docker version
+  - docker swarm join --token SWMTKN-1-5xux6wynmtu8djw300ihp5t61ls8ff1zch942i8x8ibj9m9qhy-54g3g73csex6kqxg8zc45qe25 <yourhostprivateip>:2377
+- Worker node 2
+  - sudo apt-get update
+  - sudo mkdir -m 0755 -p /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    \$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt install docker.io
+  - docker version
+  - docker swarm join --token SWMTKN-1-5xux6wynmtu8djw300ihp5t61ls8ff1zch942i8x8ibj9m9qhy-54g3g73csex6kqxg8zc45qe25 <yourhostprivateip>:2377
+
+## kubernetes
+
+- check Kubernetes+cluster+deployment.txt
+- Master node
+
+  - https://github.com/lerndevops/educka/blob/master/1-intall/install-kubernetes-v1.24-ubuntu-debian.md
+    kubeadm token create --print-join-command
+  - kubectl get nodes
+  - kubectl create deployment my-nginx01 --image=nginx
+  - kubectl get pods
+  - kubectl get pods -o wide
+  - kubectl exec my-nginx01-59f6bf4c9-mh65w -- env
+  - kubectl scale deployment my-nginx01 --replicas=03
+  - kubectl get pods -o wide
+  - kubectl expose deployment my-nginx01 --type="NodePort" \
+    --port 60001 --target-port 80 --dry-run="client" -o yaml >deployment.yml
+  - nano deployment.yml
+    - nodePort: 30005 #add this line
+    - <img width="278" alt="image" src="https://user-images.githubusercontent.com/57224583/218450326-80523669-a1fc-403c-8f9e-42aa859a873c.png">
+
+- Worker Node 1
+  - https://github.com/lerndevops/educka/blob/master/1-intall/install-kubernetes-v1.24-ubuntu-debian.md
+- Worker node 2
+  - https://github.com/lerndevops/educka/blob/master/1-intall/install-kubernetes-v1.24-ubuntu-debian.md
